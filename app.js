@@ -60,7 +60,7 @@ app.get("/", (req, res) => {
 app.get("/user", async (req, res) => {
   await sequelize.sync({ force: true}) // 기존 테이블 초기화
   const newUser = await User.create({ name:"홍길동", age: 28 });
-  console.log("유저 생성 완료:", newUser.toJSON());
+  res.send("유저 생성 완료:", newUser.toJSON());
 })
 
 app.get("/api/items", (req, res) => {
