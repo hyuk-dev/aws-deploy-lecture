@@ -1,17 +1,38 @@
 // app.js
 const express = require("express");
-const dotenv = require('dotenv');
-const morgan = require('morgan');
+const dotenv = require("dotenv");
+const morgan = require("morgan");
+const { Sequelize } = require("sequelize");
 
 dotenv.config();
+const config = {
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT, 10),
+  dialect: process.env.DB_DIALECT,
+};
+
+const sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  config
+);
+
+sequelize
+  .authenticate()
+  .then(() => console.log("DB 연결 성공"))
+  .catch((err) => console.error("DB 연결 실패", err));
 
 const app = express();
 
 // app.use(morgan('dev'))
-if(process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
 } else {
-  app.use(morgan('common'))
+  app.use(morgan("common"));
 }
 app.use(express.json());
 
