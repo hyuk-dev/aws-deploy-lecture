@@ -2,7 +2,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
-const { Sequelize } = require("sequelize");
+const { Sequelize, DataTypes } = require("sequelize");
 
 dotenv.config();
 const config = {
@@ -27,10 +27,21 @@ const sequelize = new Sequelize(
   config
 );
 
+const User = sequelize.define("User", {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  age: {
+    type: DataTypes.INTEGER,
+  },
+});
+
 sequelize
   .authenticate()
   .then(() => console.log("DB 연결 성공"))
   .catch((err) => console.error("DB 연결 실패", err));
+
 
 const app = express();
 
@@ -45,6 +56,12 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello World from Express!");
 });
+
+app.get("/user", async (req, res) => {
+  await sequelize.sync({ force: true}) // 기존 테이블 초기화
+  const newUser = await User.create({ name:"홍길동", age: 28 });
+  console.log("유저 생성 완료:", newUser.toJSON());
+})
 
 app.get("/api/items", (req, res) => {
   res.json([
