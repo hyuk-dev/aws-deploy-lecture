@@ -22,3 +22,6 @@ build/
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+# PM2 설정
+ecosystem.config.js
