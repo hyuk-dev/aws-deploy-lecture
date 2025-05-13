@@ -12,12 +12,6 @@ const config = {
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT, 10),
   dialect: process.env.DB_DIALECT,
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
-  },
 };
 
 const sequelize = new Sequelize(
