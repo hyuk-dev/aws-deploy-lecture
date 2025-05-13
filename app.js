@@ -15,9 +15,9 @@ const config = {
   dialectOptions: {
     ssl: {
       require: true,
-      rejectUnauthorized: false
-    }
-  }
+      rejectUnauthorized: false,
+    },
+  },
 };
 
 const sequelize = new Sequelize(
@@ -42,7 +42,6 @@ sequelize
   .then(() => console.log("DB 연결 성공"))
   .catch((err) => console.error("DB 연결 실패", err));
 
-
 const app = express();
 
 // app.use(morgan('dev'))
@@ -58,10 +57,10 @@ app.get("/", (req, res) => {
 });
 
 app.get("/user", async (req, res) => {
-  await sequelize.sync({ force: true}) // 기존 테이블 초기화
-  const newUser = await User.create({ name:"홍길동", age: 28 });
-  res.send(`유저 생성 완료: ${newUser.toJSON()}`);
-})
+  await sequelize.sync({ force: true }); // 기존 테이블 초기화
+  const newUser = await User.create({ name: "홍길동", age: 28 });
+  res.json({ message: "유저 생성 완료", user: newUser.toJSON() });
+});
 
 app.get("/api/items", (req, res) => {
   res.json([
