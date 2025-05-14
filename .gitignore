@@ -19,7 +19,6 @@ dist/
 build/
 
 # npm 캐시/잠금 관련
-package-lock.json
 pnpm-lock.yaml
 yarn.lock
 
