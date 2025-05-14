@@ -1,0 +1,31 @@
+name: Express App CI # 워크 플로우 이름
+
+on: # 어떤 이벤트가 발생했을 때 이 워크 플로우를 실행할 지 (트리거)
+  push: # 특정 브랜치에 코드가 push 될 때
+    branches: [main]
+  pull_request: # 특정 브랜치로 pull request가 생성되거나 업데이트 될 때
+    branches: [main]
+
+jobs: # 실행될 작업 목록
+  build-and-test: # Job의 고유 ID (커스터마이징 가능)
+    runs-on: ubuntu-latest # Job이 실행될 가상 환경(러너) 지정
+
+    strategy: # (선택) 여러 버전의 Node.js에서 테스트 하고 싶을 때
+      matrix: # 매트릭스 빌드 정의
+        node-version: [16.x, 18.x, 20.x]
+      
+    steps: # Job 내에서 순차적으로 실행될 단계 모음(steps)
+      - name: Checkout repository # 스텝 이름 (사람이 읽기 쉬운 형태로)
+        uses: actions/checkout@v4 # 사용할 액션 (Github 저장소 코드를 러너로 가져오는 역할)
+
+      - name: Use Node.js ${{ matrix.node-version }} #스텝 이름 (매트릭스 변수)
+        uses: actions/setup-node@v4 # 사용할 액션 (Github 저장소 코드를 러너로 가져옴)
+        with: # 액션에 전달할 파라미터
+          node-version: ${{ matrix.node-version }} # 설정할 Node.js 버전
+          cache: 'npm' # npm 의존성 캐싱 설정 (빌드 속도 향상)
+
+      - name: Install dependencies
+        run: npm ci # package-lock.json을 사용하여 정확하고 빠르게 의존성 설치 (CI 환경 권장)
+
+      - name: Run tests
+        run: npm test # package.json의 "scripts"."test" 명령어 실행
